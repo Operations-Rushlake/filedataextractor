@@ -10,11 +10,13 @@ import path from "path";
 const app = express();
 const upload = multer({ dest: "uploads/" });
 
+// Simple health check endpoint
 app.get("/", (req, res) => {
   res.json({ message: "📄 File Data Extractor microservice is running" });
 });
 
-app.post("/extract", upload.single("file"), async (req, res) => {
+// Unified handler function (for both / and /extract)
+async function handleFileExtraction(req, res) {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });
   }
@@ -54,6 +56,7 @@ app.post("/extract", upload.single("file"), async (req, res) => {
         break;
       }
       default: {
+        // Try with textract (supports many formats)
         extractedText = await new Promise((resolve, reject) => {
           textract.fromBufferWithName(fileName, fileBuffer, (err, text) => {
             if (err) reject(err);
@@ -73,9 +76,14 @@ app.post("/extract", upload.single("file"), async (req, res) => {
       error: err.message,
     });
   } finally {
-    fs.unlinkSync(filePath); // cleanup temp file
+    // Always remove uploaded temp file
+    fs.unlinkSync(filePath);
   }
-});
+}
+
+// Accept POST uploads at both "/" and "/extract"
+app.post("/", upload.single("file"), handleFileExtraction);
+app.post("/extract", upload.single("file"), handleFileExtraction);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ File Extractor running on port ${PORT}`));
