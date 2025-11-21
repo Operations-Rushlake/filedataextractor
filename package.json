@@ -2,18 +2,29 @@
   "name": "filedataextractor",
   "version": "1.0.0",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
-    "start": "node index.js"
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node index.ts"
   },
   "dependencies": {
-  "express": "^4.18.2",
-  "body-parser": "^1.20.2",
-  "multer": "^1.4.5-lts.1",
-  "pdf-parse": "^1.1.1",
-  "xlsx": "^0.18.5",
-  "docx": "^8.1.0",
-  "textract": "^2.5.0",
-  "mammoth": "^1.6.0"
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2",
+    "multer": "^1.4.5-lts.1",
+    "pdf-parse": "^1.1.1",
+    "xlsx": "^0.18.5",
+    "docx": "^8.1.0",
+    "textract": "^2.5.0",
+    "mammoth": "^1.6.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "@types/node": "^20.11.0",
+    "@types/express": "^4.17.21",
+    "ts-node": "^10.9.2"
   }
 }
